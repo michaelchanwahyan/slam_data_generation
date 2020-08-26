@@ -160,8 +160,8 @@ underestimated_ptNum = ceil(scan_time*l_rps*l_azimuth_res) + path_sectNum;
 PCL = zeros( ceil( underestimated_ptNum * 1.05 ) , 2);
 PCL_ptNum = size(PCL,1);
 fprintf('allocated points for the whole journey: %d\n', PCL_ptNum);
-noise_measuring = 0.025 * randn(1,ceil( underestimated_ptNum * 2 ));
-noise_motion = 0.005 * randn(ceil( underestimated_ptNum * 2 ) , 2);
+noise_measuring = 0.01 * randn(1,ceil( underestimated_ptNum * 4 ));
+noise_motion = 0.01 * randn(ceil( underestimated_ptNum * 2 ) , 2);
 
 
 % --------------------------------------------------------
@@ -274,8 +274,8 @@ while (~journeyDone)
                 %x_ = l_origin(1) + gamma_ * Ru(1);
                 %y_ = l_origin(2) + gamma_ * Ru(2);
                 Ru = R_wrt_dir * Ru;
-                x_ = gamma_ * Ru(1);
-                y_ = gamma_ * Ru(2);
+                x_ = gamma_ * Ru(1) + noise_measuring(ptIdx) * Ru(1) / sqrt(Ru' * Ru);
+                y_ = gamma_ * Ru(2) + noise_measuring(ptIdx) * Ru(2) / sqrt(Ru' * Ru);
 
                 PCL(ptIdx,:) = [ x_ , y_ ];
                 ptIdx = ptIdx + 1;
@@ -324,8 +324,8 @@ while (~journeyDone)
             Ru = R_wrt_dir * Ru;
             %x_ = l_origin(1) + gamma_ * Ru(1);
             %y_ = l_origin(2) + gamma_ * Ru(2);
-            x_ = gamma_ * Ru(1);
-            y_ = gamma_ * Ru(2);
+            x_ = gamma_ * Ru(1) + noise_measuring(ptIdx) * Ru(1) / sqrt(Ru' * Ru);
+            y_ = gamma_ * Ru(2) + noise_measuring(ptIdx) * Ru(2) / sqrt(Ru' * Ru);
 
             PCL(ptIdx,:) = [ x_ , y_ ];
             ptIdx = ptIdx + 1;
